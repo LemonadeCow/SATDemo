@@ -13,15 +13,31 @@ using System.Collections.Generic;
   *
   */
 
-
 namespace HitBox
 {
+
+  public class MathThings{}
+  public static class MathExtension
+  {
+    public static double VectorDotProduct(this MathThings mc, Vector v1, Vector v2)
+    {
+      return((v1.X*v2.X) + (v1.Y*v2.Y));
+    }
+
+    public static double CalcMagnitude(this MathThings mc, Vector v)
+    {
+      v.magnitude = Math.Sqrt(Math.Pow(v.X, 2)) + (Math.Pow(v.X, 2));
+      return (v.magnitude);
+    }
+  }
   //This class will be used to detect collision
   public class Check
   {
     //Temporary method
     public static void Main(string [] args)
     {
+
+      MathThings MathThings = new MathThings();
       //Polygon rectangle = new Polygon(1,4,2,4,2,3,1,1);
         //14242311
 
@@ -32,7 +48,9 @@ namespace HitBox
 
       Polygon Rectangle = new Polygon(p1, p2, p3, p4);
 
-      Console.WriteLine(Rectangle.Vertices[1].ReadCoords()[0]);
+      Console.Write(MathThings.CalcMagnitude(Rectangle.Vertices[0]));
+
+
     }
 
   }
@@ -49,20 +67,25 @@ namespace HitBox
 
   public class Vector
   {
-    public int [] Coords {get; set;}
+    public double [] Coords {get; set;}
 
-    public int X {get; set;}
-    public int Y {get; set;}
+    public double X {get; set;}
+    public double Y {get; set;}
 
-    public Vector(int x, int y)
+    public double magnitude {get; set;}
+
+    public Vector(double x, double y)
     {
       this.X = x;
       this.Y = y;
 
-      Coords = new int [] {X, Y};
+      this.magnitude = 0;
+
+      Coords = new double [] {X, Y};
+
     }
 
-    public int[] ReadCoords()
+    public double[] ReadCoords()
     {
       return (Coords);
     }
@@ -81,7 +104,7 @@ namespace HitBox
   public class Polygon
   {
 
-    public Dictionary<string, int[]> verticesDict =  new Dictionary<string, int[]>();
+    //public Dictionary<string, int[]> verticesDict =  new Dictionary<string, int[]>();
     public Vector [] Vertices {get; set;}
 
     public double IniMax {get; set;}
@@ -95,29 +118,22 @@ namespace HitBox
 
       PerpAxis = new PerpendicularAxis(Vertices[0]);
 
-      for(int i = 0; i < Vertices.Length; i++)
+      /*for(int i = 0; i < Vertices.Length; i++)
       {
-        verticesDict.Add("v" + i, Vertices[i].ReadCoords());
-      }
+        verticesDict.Add("v" + (i+1), Vertices[i].ReadCoords());
+      }*/
+
     }
 
     public class PerpendicularAxis
     {
-      public Dictionary<string, int[]> verticesDict = new Dictionary<string, int[]>();
 
       public Vector Vector {get; set;}
 
       public PerpendicularAxis(Vector v)
       {
         Vector = v;
-
       }
-
-      public int VectorDotProduct(Vector v1, Vector v2)
-      {
-        return((v1.X*v2.X) + (v1.Y*v2.Y));
-      }
-
     }
   }
 }
