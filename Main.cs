@@ -56,6 +56,7 @@ namespace CollisionDetection
       MathThings MathThings = new MathThings();
 
       Vector p1 = new Vector(1, 4);
+
       Vector p2 = new Vector(2, 4);
       Vector p3 = new Vector(2, 3);
       Vector p4 = new Vector(1, 3);
@@ -66,6 +67,7 @@ namespace CollisionDetection
 
       MathThings.CalculateMagnitude(p1);
       MathThings.NormalizeVector(p1);
+      MathThings.VectorDotProduct(p1, p2);
     }
 
     public static void SetPoints(Polygon p)
@@ -120,7 +122,7 @@ namespace CollisionDetection
 
       public static double CalculateMagnitude(this MathThings mc, Vector v)
       {
-        v.Magnitude = Math.Sqrt(Math.Pow(v.X, 2)) + (Math.Pow(v.X, 2));
+        v.Magnitude = Math.Sqrt(Math.Pow(v.X, 2) + Math.Pow(v.Y, 2));
 
         Console.WriteLine("Vector's Magnitude = " + v.Magnitude);
 
@@ -187,7 +189,7 @@ namespace CollisionDetection
     public Vector(double X, double Y)
     {
       this.X = X;
-      this.Y = X;
+      this.Y = Y;
 
       this.Magnitude = 0;
 
