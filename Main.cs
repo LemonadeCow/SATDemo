@@ -3,13 +3,20 @@
   *
   * Is the PerpendicularAxis the same as a normal on a vector?
   *
+  * YES
+  *
   * What exactly am I doing when I'm normalizing a vector?
   *
+  * I am changing the Vector's Magnitude to 1
+  *
   * What is a unit vector? Is it just a normalized vector?
+  *
+  * Yes?
   *
   * How can I project the min/max values of the polygon on an axis?
   * This question also feeds into loops.
   *
+  * Using the VectorDotProduct gives me the projection
   *
   * Notes:
   *
@@ -56,45 +63,78 @@ namespace CollisionDetection
       MathThings MathThings = new MathThings();
 
       Vector p1 = new Vector(1, 4);
-
       Vector p2 = new Vector(2, 4);
       Vector p3 = new Vector(2, 3);
       Vector p4 = new Vector(1, 3);
 
       Polygon Rectangle = new Polygon(p1, p2, p3, p4);
 
-      //Rectangle.PerpAxis.getPerpAxis(Rectangle);
+      Vector pp1 = new Vector(2, 4);
+      Vector pp2 = new Vector(3, 4);
+      Vector pp3 = new Vector(3, 3);
 
-      MathThings.CalculateMagnitude(p1);
-      MathThings.NormalizeVector(p1);
-      MathThings.VectorDotProduct(p1, p2);
+      Polygon Triangle = new Polygon(pp1, pp2, pp3);
+
+      CheckPolygons(Rectangle, Triangle);
+
+      //MathThings.VectorDotProduct(p1, p2);
     }
 
-    public static void SetPoints(Polygon p)
+    public static void CheckPolygons(Polygon p, Polygon p2)
     {
+
       MathThings MathThings = new MathThings();
 
-      p.IniMin = MathThings.VectorDotProduct(p.PerpAxis.Vector, p.Vertices[0]); // 0 will become an index when I actually loop it
-      p.IniMax = p.IniMin;
-
-      Console.WriteLine(p.IniMin);
-      Console.WriteLine(p.IniMax);
-
-      for (int i = 0; i < p.Vertices.Length; i++)
+      for(int a = 0; a < p.Vertices.Length; a++)
       {
-        /*
-        this.polygon[i].rectDot = polygon[i].x;
-        this.polygon[i].iniMin = Math.min(this.polygon[i].iniMin , this.polygon[i].rectDot);
-        this.polygon[i].iniMax = Math.max(this.polygon[i].iniMax , this.polygon[i].rectDot);
 
-        //this is my placeholder code until I start looping the variables
-      */
+        p.PerpAxis.getPerpAxis(p, a);
+        MathThings.NormalizeVector(p.PerpAxis.Vector);
+
+        p.IniMax = MathThings.VectorDotProduct(p.PerpAxis.Vector, p.Vertices[0]);
+        p.IniMin = p.IniMax;
+
+        p.IniMax = MathThings.VectorDotProduct(p.PerpAxis.Vector, p.Vertices[0]);
+        p.IniMin = p.IniMax;
+
+        for(int i = 0; i < p.Vertices.Length; i++)
+        {
+          if(p.IniMax < MathThings.VectorDotProduct(p.PerpAxis.Vector, p.Vertices[i]))
+          {
+            p.IniMax = MathThings.VectorDotProduct(p.PerpAxis.Vector, p.Vertices[i]);
+          }
+
+          if(p.IniMin > MathThings.VectorDotProduct(p.PerpAxis.Vector, p.Vertices[i]))
+          {
+            p.IniMin = MathThings.VectorDotProduct(p.PerpAxis.Vector, p.Vertices[i]);
+          }
+
+          Console.WriteLine("IniMax = " + p.IniMax);
+          Console.WriteLine("IniMin = " + p.IniMin);
+        }
+
+        for(int i = 0; i < p2.Vertices.Length; i++)
+        {
+          if(p2.IniMax < MathThings.VectorDotProduct(p.PerpAxis.Vector, p2.Vertices[i]))
+          {
+            p2.IniMax = MathThings.VectorDotProduct(p.PerpAxis.Vector, p2.Vertices[i]);
+          }
+
+          if(p2.IniMin > MathThings.VectorDotProduct(p2.PerpAxis.Vector, p2.Vertices[i]))
+          {
+            p2.IniMin = MathThings.VectorDotProduct(p2.PerpAxis.Vector, p2.Vertices[i]);
+          }
+        }
+
+        if(p.IniMin >= p2.IniMax || p2.IniMin >= p.IniMax)
+          Console.WriteLine("Both Polygons Are Touching On This Axis");
+        else
+          Console.WriteLine("Both Polygons Are Not Touching On This Axis");
+
+        if(a < p.Vertices.Length - 1)
+          Console.WriteLine("Checking The Next Axis");
+
       }
-
-    }
-
-    public static void ProjectPoints(Polygon p)
-    {
 
     }
 
@@ -118,15 +158,6 @@ namespace CollisionDetection
       public static double VectorDotProduct(this MathThings mc, Vector v1, Vector v2)
       {
         return((v1.X*v2.X) + (v1.Y*v2.Y));
-      }
-
-      public static double CalculateMagnitude(this MathThings mc, Vector v)
-      {
-        v.Magnitude = Math.Sqrt(Math.Pow(v.X, 2) + Math.Pow(v.Y, 2));
-
-        Console.WriteLine("Vector's Magnitude = " + v.Magnitude);
-
-        return (v.Magnitude);
       }
 
       public static void NormalizeVector(this MathThings mc, Vector v)
@@ -188,10 +219,13 @@ namespace CollisionDetection
     //Vector constructor
     public Vector(double X, double Y)
     {
+
       this.X = X;
       this.Y = Y;
 
-      this.Magnitude = 0;
+      this.Magnitude = Math.Sqrt(Math.Pow(this.X, 2) + Math.Pow(this.Y, 2));
+
+      Console.WriteLine("Vector's Magnitude = " + this.Magnitude);
 
       this.Coords = new double [] {X, Y};
     }
@@ -231,8 +265,12 @@ namespace CollisionDetection
     //Polygon constructor
     public Polygon(params Vector[] Vertices)
     {
+      this.IniMin = 0;
+      this.IniMax = 0;
 
       this.Vertices = Vertices;
+
+      this.PerpAxis = new PerpendicularAxis();
 
       for(int i = 0; i < Vertices.Length; i++)
       {
@@ -256,19 +294,25 @@ namespace CollisionDetection
     {
 
       public Vector Vector {get; set;}
-      public Polygon Polygon {get; set;}
 
       public PerpendicularAxis()
       {
-        this.Vector = new Vector(0,0);
+        this.Vector = new Vector(0, 0);
+        Console.WriteLine("PerpAxis = 0");
       }
 
-      public void getPerpAxis(Polygon p)
+      public void getPerpAxis(Polygon p, int i) //int i
       {
-        this.Polygon = p;
-
-        this.Vector.X = -(this.Polygon.Vertices[0].X - this.Polygon.Vertices[0+1].X); //Will use a loop later
-        this.Vector.Y = this.Polygon.Vertices[0].Y - this.Polygon.Vertices[0+1].Y; //Will use a loop later
+        if(i == (p.Vertices.Length - 1))
+        {
+          this.Vector.X = -(p.Vertices[i].X - p.Vertices[0].X);
+          this.Vector.Y = p.Vertices[i].Y - p.Vertices[0].Y;
+        }
+        else
+        {
+          this.Vector.X = -(p.Vertices[i].X - p.Vertices[i + 1].X);
+          this.Vector.Y = p.Vertices[i].Y - p.Vertices[i + 1].Y; //i + 1 doesn't seem right
+        }
       }
     }
   }
