@@ -1,5 +1,5 @@
 /**
-  * Questions and Notes:
+  * Questions:
   *
   * Is the PerpendicularAxis the same as a normal on a vector?
   *
@@ -9,6 +9,11 @@
   *
   * How can I project the min/max values of the polygon on an axis?
   * This question also feeds into loops.
+  *
+  *
+  * Notes:
+  *
+  *
   *
   *
   */
@@ -28,6 +33,9 @@ using System.Collections.Generic;
   * https://www.metanetsoftware.com/technique/tutorialA.html
   * https://gamedevelopment.tutsplus.com/tutorials/collision-detection-using-the-separating-axis-theorem--gamedev-169
   * https://dyn4j.org/2010/01/sat/
+  *
+  * Things to Try:
+  * ArrayLists
   *
   */
 
@@ -54,7 +62,8 @@ namespace CollisionDetection
 
       Polygon Rectangle = new Polygon(p1, p2, p3, p4);
 
-  
+      //Rectangle.PerpAxis.getPerpAxis(Rectangle);
+
       MathThings.CalculateMagnitude(p1);
       MathThings.NormalizeVector(p1);
     }
@@ -151,10 +160,12 @@ namespace CollisionDetection
   */
 
   /*
-  using PerpendicularAxis;
 
-  I might need to use this if I want to create a PerpAxis
+  // using PerpendicularAxis;
+
+  I might need to imprort this if I want to create a PerpAxis
   method inside of the vector class
+
   */
 
   public class Vector
