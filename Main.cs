@@ -20,7 +20,7 @@
   *
   * Notes:
   *
-  *
+  * Vectors are cool
   *
   *
   */
@@ -36,6 +36,7 @@ using System.Collections.Generic;
   * on the Seperating Axis Theorem.
   *
   * sources:
+  *
   * https://www.sevenson.com.au/programming/sat/
   * https://www.metanetsoftware.com/technique/tutorialA.html
   * https://gamedevelopment.tutsplus.com/tutorials/collision-detection-using-the-separating-axis-theorem--gamedev-169
@@ -43,6 +44,8 @@ using System.Collections.Generic;
   *
   * Things to Try:
   * ArrayLists
+  * Make a graphical representation
+  *
   *
   */
 
@@ -67,15 +70,15 @@ namespace CollisionDetection
       Vector p3 = new Vector(2, 3);
       Vector p4 = new Vector(1, 3);
 
-      Polygon Rectangle = new Polygon(p1, p2, p3, p4);
+      Polygon Square = new Polygon(p1, p2, p3, p4);
 
-      Vector pp1 = new Vector(2, 4);
-      Vector pp2 = new Vector(3, 4);
-      Vector pp3 = new Vector(3, 3);
+      Vector pp1 = new Vector(1, 4);
+      Vector pp2 = new Vector(2, 4);
+      Vector pp3 = new Vector(2, 3);
 
       Polygon Triangle = new Polygon(pp1, pp2, pp3);
 
-      CheckPolygons(Rectangle, Triangle);
+      CheckPolygons(Triangle, Square);
 
       //MathThings.VectorDotProduct(p1, p2);
     }
@@ -94,11 +97,12 @@ namespace CollisionDetection
         p.IniMax = MathThings.VectorDotProduct(p.PerpAxis.Vector, p.Vertices[0]);
         p.IniMin = p.IniMax;
 
-        p.IniMax = MathThings.VectorDotProduct(p.PerpAxis.Vector, p.Vertices[0]);
-        p.IniMin = p.IniMax;
+        p2.IniMax = MathThings.VectorDotProduct(p.PerpAxis.Vector, p2.Vertices[0]);
+        p2.IniMin = p2.IniMax;
 
         for(int i = 0; i < p.Vertices.Length; i++)
         {
+
           if(p.IniMax < MathThings.VectorDotProduct(p.PerpAxis.Vector, p.Vertices[i]))
           {
             p.IniMax = MathThings.VectorDotProduct(p.PerpAxis.Vector, p.Vertices[i]);
@@ -109,24 +113,29 @@ namespace CollisionDetection
             p.IniMin = MathThings.VectorDotProduct(p.PerpAxis.Vector, p.Vertices[i]);
           }
 
-          Console.WriteLine("IniMax = " + p.IniMax);
-          Console.WriteLine("IniMin = " + p.IniMin);
         }
 
         for(int i = 0; i < p2.Vertices.Length; i++)
         {
+
           if(p2.IniMax < MathThings.VectorDotProduct(p.PerpAxis.Vector, p2.Vertices[i]))
           {
             p2.IniMax = MathThings.VectorDotProduct(p.PerpAxis.Vector, p2.Vertices[i]);
           }
 
-          if(p2.IniMin > MathThings.VectorDotProduct(p2.PerpAxis.Vector, p2.Vertices[i]))
+          if(p2.IniMin > MathThings.VectorDotProduct(p.PerpAxis.Vector, p2.Vertices[i]))
           {
-            p2.IniMin = MathThings.VectorDotProduct(p2.PerpAxis.Vector, p2.Vertices[i]);
+            p2.IniMin = MathThings.VectorDotProduct(p.PerpAxis.Vector, p2.Vertices[i]);
           }
-        }
 
-        if(p.IniMin >= p2.IniMax || p2.IniMin >= p.IniMax)
+        }
+        Console.WriteLine("p1 IniMax = " + p.IniMax);
+        Console.WriteLine("p1 IniMin = " + p.IniMin);
+
+        Console.WriteLine("p2 IniMax = " + p2.IniMax);
+        Console.WriteLine("p2 IniMin = " + p2.IniMin);
+
+        if(p.IniMax >= p2.IniMax || p.IniMin >= p2.IniMin)
           Console.WriteLine("Both Polygons Are Touching On This Axis");
         else
           Console.WriteLine("Both Polygons Are Not Touching On This Axis");
@@ -192,15 +201,6 @@ namespace CollisionDetection
   *
   */
 
-  /*
-
-  // using PerpendicularAxis;
-
-  I might need to imprort this if I want to create a PerpAxis
-  method inside of the vector class
-
-  */
-
   public class Vector
   {
 
@@ -210,11 +210,6 @@ namespace CollisionDetection
     public double Y {get; set;}
 
     public double Magnitude {get; set;}
-
-    /*
-    public PerpendicularAxis PerpAxis;
-    This throws CS0246 : The type or namespace name 'PerpendicularAxis' could not be found
-    */
 
     //Vector constructor
     public Vector(double X, double Y)
@@ -251,8 +246,6 @@ namespace CollisionDetection
   public class Polygon
   {
 
-    //public Dictionary<string, int[]> verticesDict =  new Dictionary<string, int[]>();
-
     public Vector [] Vertices {get; set;}
 
     public double IniMax {get; set;}
@@ -272,23 +265,15 @@ namespace CollisionDetection
 
       this.PerpAxis = new PerpendicularAxis();
 
-      for(int i = 0; i < Vertices.Length; i++)
-      {
-        /*
-        this.Vertices[i].PerpAxis = new PerpendicularAxis();
-
-        ? does this work in theory?????????????????
-        */
-      }
-
-      /*
-      for(int i = 0; i < Vertices.Length; i++)
-      {
-        verticesDict.Add("v" + (i+1), Vertices[i].ReadCoords());
-      }
-      */
-
     }
+
+    /**
+      * The PerpendicularAxis Class !!!!
+      *
+      * This class is neseted inside of the Polygon Class and is used
+      * as a way to find and store the PerpendicularAxis of the Polygon
+      *
+      */
 
     public class PerpendicularAxis
     {
@@ -298,20 +283,27 @@ namespace CollisionDetection
       public PerpendicularAxis()
       {
         this.Vector = new Vector(0, 0);
+        //Initializing the Variable
+
         Console.WriteLine("PerpAxis = 0");
+        //debugging...
+
       }
 
-      public void getPerpAxis(Polygon p, int i) //int i
+      //This method gets the PerpAxis relative to the index
+      public void getPerpAxis(Polygon p, int i)
       {
         if(i == (p.Vertices.Length - 1))
         {
           this.Vector.X = -(p.Vertices[i].X - p.Vertices[0].X);
           this.Vector.Y = p.Vertices[i].Y - p.Vertices[0].Y;
+          //Finds the Vector's normal but also connects the last point with the 1st point
         }
         else
         {
           this.Vector.X = -(p.Vertices[i].X - p.Vertices[i + 1].X);
           this.Vector.Y = p.Vertices[i].Y - p.Vertices[i + 1].Y; //i + 1 doesn't seem right
+          //Finds the Vector's normal
         }
       }
     }
