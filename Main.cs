@@ -7,7 +7,7 @@
   *
   * What exactly am I doing when I'm normalizing a vector?
   *
-  * I am changing the Vector's Magnitude to 1
+  * I am changing the Vector's Magnitude to 1 ?
   *
   * What is a unit vector? Is it just a normalized vector?
   *
@@ -21,7 +21,6 @@
   * Notes:
   *
   * Vectors are cool
-  *
   *
   */
 
@@ -45,7 +44,6 @@ using System.Collections.Generic;
   * Things to Try:
   * ArrayLists
   * Make a graphical representation
-  *
   *
   */
 
@@ -217,17 +215,16 @@ namespace CollisionDetection
 
       this.X = X;
       this.Y = Y;
+      this.Coords = new double [] {X, Y};
 
       this.Magnitude = Math.Sqrt(Math.Pow(this.X, 2) + Math.Pow(this.Y, 2));
 
       Console.WriteLine("Vector's Magnitude = " + this.Magnitude);
-
-      this.Coords = new double [] {X, Y};
     }
 
     public double[] ReadCoords()
     {
-      return (Coords);
+      return (this.Coords); // used this to debug
     }
 
   }
