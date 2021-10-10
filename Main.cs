@@ -78,37 +78,35 @@ namespace CollisionDetection
 
       CheckPolygons(Triangle, Square);
 
-      //MathThings.VectorDotProduct(p1, p2);
+      //VectorDotProduct(p1, p2);
     }
 
     public static void CheckPolygons(Polygon p, Polygon p2)
     {
 
-      MathThings MathThings = new MathThings();
-
       for(int a = 0; a < p.Vertices.Length; a++)
       {
 
         p.PerpAxis.getPerpAxis(p, a);
-        MathThings.NormalizeVector(p.PerpAxis.Vector);
+        NormalizeVector(p.PerpAxis.Vector);
 
-        p.IniMax = MathThings.VectorDotProduct(p.PerpAxis.Vector, p.Vertices[0]);
+        p.IniMax = VectorDotProduct(p.PerpAxis.Vector, p.Vertices[0]);
         p.IniMin = p.IniMax;
 
-        p2.IniMax = MathThings.VectorDotProduct(p.PerpAxis.Vector, p2.Vertices[0]);
+        p2.IniMax = VectorDotProduct(p.PerpAxis.Vector, p2.Vertices[0]);
         p2.IniMin = p2.IniMax;
 
         for(int i = 0; i < p.Vertices.Length; i++)
         {
 
-          if(p.IniMax < MathThings.VectorDotProduct(p.PerpAxis.Vector, p.Vertices[i]))
+          if(p.IniMax < VectorDotProduct(p.PerpAxis.Vector, p.Vertices[i]))
           {
-            p.IniMax = MathThings.VectorDotProduct(p.PerpAxis.Vector, p.Vertices[i]);
+            p.IniMax = VectorDotProduct(p.PerpAxis.Vector, p.Vertices[i]);
           }
 
-          if(p.IniMin > MathThings.VectorDotProduct(p.PerpAxis.Vector, p.Vertices[i]))
+          if(p.IniMin > VectorDotProduct(p.PerpAxis.Vector, p.Vertices[i]))
           {
-            p.IniMin = MathThings.VectorDotProduct(p.PerpAxis.Vector, p.Vertices[i]);
+            p.IniMin = VectorDotProduct(p.PerpAxis.Vector, p.Vertices[i]);
           }
 
         }
@@ -116,14 +114,14 @@ namespace CollisionDetection
         for(int i = 0; i < p2.Vertices.Length; i++)
         {
 
-          if(p2.IniMax < MathThings.VectorDotProduct(p.PerpAxis.Vector, p2.Vertices[i]))
+          if(p2.IniMax < VectorDotProduct(p.PerpAxis.Vector, p2.Vertices[i]))
           {
-            p2.IniMax = MathThings.VectorDotProduct(p.PerpAxis.Vector, p2.Vertices[i]);
+            p2.IniMax = VectorDotProduct(p.PerpAxis.Vector, p2.Vertices[i]);
           }
 
-          if(p2.IniMin > MathThings.VectorDotProduct(p.PerpAxis.Vector, p2.Vertices[i]))
+          if(p2.IniMin > VectorDotProduct(p.PerpAxis.Vector, p2.Vertices[i]))
           {
-            p2.IniMin = MathThings.VectorDotProduct(p.PerpAxis.Vector, p2.Vertices[i]);
+            p2.IniMin = VectorDotProduct(p.PerpAxis.Vector, p2.Vertices[i]);
           }
 
         }
